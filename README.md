@@ -17,7 +17,7 @@ npm install
 To start the application, run:
 
 ```
-node index.js
+nodemon index.js
 ```
 
 By default, the application will run on port 3000. You can access it in your web browser at `http://localhost:3000`.
