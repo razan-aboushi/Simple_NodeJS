@@ -15,10 +15,6 @@ const aboutUsGet = (req, res) => {
 }
 
 
-
-
-
-
 module.exports = {
     aboutUsGet
 }
