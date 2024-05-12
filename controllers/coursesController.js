@@ -1,5 +1,6 @@
 const connection = require('../models/dbConncet');
 
+// Get all course data based on it's ID
 const getCourseData = (req, res) => {
     const courseId = parseInt(req.params.courseId);
     const courseQuery = 'SELECT * FROM courses WHERE course_id = ?';
@@ -47,6 +48,53 @@ const getCourseData = (req, res) => {
     });
 };
 
+
+// Make the filter on the courses based on university or category
+const getCoursesBasedOnFilter = (req, res) => {
+    const {searchTerm, universityFilter, categoryFilter} = req.query;
+
+    let query = `
+        SELECT courses.*,
+               universities.university_name,
+               categories.category_name,
+               users.name AS publisher_name
+        FROM courses
+                 INNER JOIN universities ON courses.university_id = universities.university_id
+                 INNER JOIN categories ON courses.category_id = categories.category_id
+                 INNER JOIN users ON courses.user_id = users.user_id
+        WHERE courses.course_status = 'مقبول'
+    `;
+
+    const queryParams = [];
+
+    if (searchTerm) {
+        query += ` AND (courses.course_title LIKE ? OR users.name LIKE ?)`;
+        queryParams.push(`%${searchTerm}%`);
+        queryParams.push(`%${searchTerm}%`);
+    }
+
+    if (universityFilter) {
+        query += ` AND courses.university_id = ?`;
+        queryParams.push(universityFilter);
+    }
+
+    if (categoryFilter) {
+        query += ` AND categories.category_name LIKE ?`;
+        queryParams.push(`%${categoryFilter}%`);
+    }
+
+    query += ` ORDER BY courses.course_id DESC`;
+
+    connection.query(query, queryParams, (error, filteredResults) => {
+        if (error) {
+            console.error('Error fetching filtered courses:', error);
+            return res.status(500).json({error: 'Failed to fetch filtered courses from the database'});
+        }
+        res.json(filteredResults);
+    });
+};
+
+
 module.exports = {
-    getCourseData
+    getCourseData, getCoursesBasedOnFilter
 };
