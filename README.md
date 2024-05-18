@@ -20,7 +20,7 @@ To start the application, run:
 nodemon index.js
 ```
 
-By default, the application will run on port 3001. You can access it in your web browser at `http://localhost:3001` or change it to port 3000.
+The application will run on port 3001. You can access it in your web browser at `http://localhost:3001` or change it to port 3000.
 
 ### Features
 - **Simple Express Server**: This application uses the Express.js framework to handle HTTP requests.
